@@ -17,7 +17,7 @@ app.use(urlencoded({ extended: false }));
 app.use(compression());
 app.use(cors());
 
-app.use('/api/v1', routes);
+app.use('/', routes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

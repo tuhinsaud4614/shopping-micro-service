@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  street     String
+  postalCode String
+  city       String
+  country    String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String   @unique
+}
+
+model Customer {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  phone     String    @unique
+  password  String
+  avatar    Picture?
+  address   Address?
+  order     Order[]
+  wishlist  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  banner      Picture?
+  type        String
+  unit        Int
+  price       Float
+  available   Boolean
+  suplier     String
+  order       Order[]
+  customer    Customer[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Picture {
+  id         String    @id @default(cuid())
+  height     Int       @default(200)
+  width      Int       @default(100)
+  url        String    @unique
+  blurHash   String
+  Product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String    @unique
+  customer   Customer? @relation(fields: [CustomerId], references: [id], onDelete: Cascade)
+  CustomerId String?   @unique
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String
+  product    Product[]
+  amount     Float
+  status     OrderStatus @default(INCOMPLETE)
+  txtnId     String      @unique
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  INCOMPLETE
+}
