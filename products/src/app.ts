@@ -13,7 +13,7 @@ app.use(compression());
 app.use(cors());
 
 app.use('/', (_, res) => {
-  res.json('hello');
+  res.json('hello from products');
 });
 
 export default app;

@@ -1,25 +1,24 @@
-import envSchema from 'env-schema';
-
-const properties = {
-  PORT: {
-    type: 'number',
-    default: 4001,
-  },
-  HOST: {
-    type: 'string',
-    default: 'http://localhost',
-  },
-};
+import type { JSONSchemaType } from 'env-schema';
+import { envSchema } from 'env-schema';
 
 type ENV = {
   PORT: number;
   HOST: string;
 };
 
-const schema = {
+const schema: JSONSchemaType<ENV> = {
   type: 'object',
-  required: Object.keys(properties),
-  properties,
+  required: ['HOST', 'PORT'],
+  properties: {
+    PORT: {
+      type: 'integer',
+      default: 4002,
+    },
+    HOST: {
+      type: 'string',
+      default: 'http://localhost',
+    },
+  },
 };
 
 const config = envSchema<ENV>({ schema, dotenv: true });
